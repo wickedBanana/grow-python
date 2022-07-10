@@ -56,6 +56,7 @@ class mqtt_poster:
         self.user = user
         self.password = password
         self.broker = broker
+        self.connected = 0
         
         self.client.username_pw_set(username=self.user, password=self.password)
         self.client.connect(self.broker, 1883, 60)
@@ -63,6 +64,10 @@ class mqtt_poster:
 
     def on_connect(self, client, userdata, flags, rc):
         self.client.subscribe(self.topic)
+        self.connected = 1
+
+    def post_state(self):
+        pass
 
 
 class View:
