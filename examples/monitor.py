@@ -12,6 +12,7 @@ import RPi.GPIO as GPIO
 import ST7735
 from fonts.ttf import RobotoMedium as UserFont
 from PIL import Image, ImageDraw, ImageFont
+import paho.mqtt.client as mqtt
 
 import yaml
 from grow import Piezo
@@ -46,6 +47,22 @@ icon_settings = Image.open("icons/icon-settings.png").convert("RGBA")
 icon_channel = Image.open("icons/icon-channel.png").convert("RGBA")
 icon_backdrop = Image.open("icons/icon-backdrop.png").convert("RGBA")
 icon_return = Image.open("icons/icon-return.png").convert("RGBA")
+
+
+class mqtt_poster:
+    def __init__(self, broker, topic, password, user):
+        self.client = mqtt.Client()
+        self.topic = topic
+        self.user = user
+        self.password = password
+        self.broker = broker
+        
+        self.client.username_pw_set(username=self.user, password=self.password)
+        self.client.connect(self.broker, 1883, 60)
+        self.client.loop_start()
+
+    def on_connect(self, client, userdata, flags, rc):
+        self.client.subscribe(self.topic)
 
 
 class View:
